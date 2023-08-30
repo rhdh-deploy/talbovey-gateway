@@ -1,0 +1,68 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: talbovey-poi-gateway-app-dev
+  annotations:
+    argocd/app-name: talbovey-poi-gateway-app-dev
+    backstage.io/kubernetes-id: talbovey-poi-gateway-app
+    backstage.io/kubernetes-namespace: talbovey
+    backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: rhdh-deploy/talbovey-gateway
+    janus-idp.io/tekton-enabled: 'true'
+  tags:
+    - java
+    - quarkus
+    - maven
+    - workshop
+  links:
+    - url: https://console-openshift-console.apps.a1jxqhzp.eastus2.aroapp.io/dev-pipelines/ns/talbovey/
+      title: Pipelines
+      icon: web
+    - url: https://console-openshift-console.apps.a1jxqhzp.eastus2.aroapp.io/k8s/ns/talbovey/deployments/talbovey-poi-gateway-app
+      title: Deployment
+      icon: web
+    - url: https://devspaces.apps.a1jxqhzp.eastus2.aroapp.io/#https://github.com/rhdh-deploy/talbovey-gateway?che-editor=che-incubator/che-code/latest&devfilePath=.devfile-vscode.yaml
+      title: OpenShift Dev Spaces (VS Code)
+      icon: web
+spec:
+  type: service
+  lifecycle: production
+  owner: "user:default/talbovey"
+  system: workshop-system-talbovey
+  providesApis:
+    - gateway-api-talbovey
+  consumesApis:
+    - backend-api-talbovey
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: workshop-system-talbovey
+  tags:
+    - backstage
+    - janus-idp
+    - openshift
+    - workshop
+    - rh-summit
+spec:
+  owner: "user:default/talbovey"
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: gateway-api-talbovey
+  description: API surface exposed to interact with Backends (summit POIs + parks data) via the Gateway
+  links:
+    - url: http://talbovey-poi-gateway-app-talbovey.apps.a1jxqhzp.eastus2.aroapp.io/q/swagger-ui
+      title: Swagger UI
+      icon: web
+    - url: https://github.com/rhdh-deploy/talbovey-gateway/tree/main/src/main/resources/META-INF/openapi.yaml
+      title: API Spec
+      icon: code
+spec:
+  type: openapi
+  lifecycle: production
+  owner: "user:default/talbovey"
+  system: workshop-system-talbovey
+  definition:
+    $text: https://github.com/rhdh-deploy/talbovey-gateway/tree/main/src/main/resources/META-INF/openapi.yaml
